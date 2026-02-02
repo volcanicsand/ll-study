@@ -490,32 +490,76 @@ const artTrivia = [
     ["<span class='hl'>The Starry Night</span> was painted while this artist was in an asylum in Saint-Remy.","Vincent van Gogh",["Van Gogh"]],
     ["Which sculptor is known for <span class='hl'>large mobile sculptures</span> that move with air currents?","Alexander Calder",["Calder"]],
     ["Which art movement literally means <span class='hl'>'new art'</span> and featured organic, flowing lines around 1900?","Art Nouveau",[]],
-    ["What painting technique uses <span class='hl'>light and shadow for dramatic contrast</span>, pioneered by Caravaggio?","chiaroscuro",[]],
-    ["What Leonardo da Vinci technique creates a <span class='hl'>smoky, hazy effect</span> by blending tones without visible lines?","sfumato",[]],
-    ["What painting technique involves applying <span class='hl'>thick layers of paint</span> so brush or knife strokes are visible?","impasto",[]],
-    ["What technique creates an <span class='hl'>optical illusion of three-dimensional space</span> on a flat surface, literally 'deceives the eye'?","trompe l'oeil",["trompe loeil"]],
-    ["What is the art term for a <span class='hl'>painting done on wet plaster</span>, used by Michelangelo on the Sistine Chapel?","fresco",[]],
-    ["<span class='hl'>Guernica</span> depicts the bombing of a town during which country's civil war?","Spain",["Spanish"]],
-    ["Which artist's real name was <span class='hl'>Domenikos Theotokopoulos</span>?","El Greco",[]],
+
+    // LL-STYLE: multi-clue descriptive questions
+    ["This Dutch painter <span class='hl'>sold only one painting</span> during his lifetime, created over 2,000 works, and painted <span class='hl'>The Starry Night</span> while a patient at an asylum in Saint-Remy-de-Provence.","Vincent van Gogh",["Van Gogh"]],
+    ["This 17th-century Dutch painter's entire known output is <span class='hl'>about 35 paintings</span>, mostly quiet domestic scenes notable for their luminous treatment of light, including <span class='hl'>Girl with a Pearl Earring</span>.","Vermeer",["Johannes Vermeer"]],
+    ["Called '<span class='hl'>the father of modern art</span>' by both Matisse and Picasso, this Post-Impressionist was obsessed with painting <span class='hl'>Mont Sainte-Victoire</span> and still lifes of fruit.","Paul Cezanne",["Cezanne"]],
+    ["This American pioneer of Abstract Expressionism was nicknamed '<span class='hl'>Jack the Dripper</span>' for his technique of pouring and splattering paint onto canvases laid on the floor.","Jackson Pollock",["Pollock"]],
+    ["This Belgian Surrealist painted a pipe with the caption '<span class='hl'>Ceci n'est pas une pipe</span>' and a man with an <span class='hl'>apple obscuring his face</span>.","Rene Magritte",["Magritte"]],
+    ["Born <span class='hl'>Andrej Varhola</span> in Pittsburgh, this artist led 'The Factory' and proclaimed that 'In the future, everyone will be <span class='hl'>world-famous for 15 minutes</span>.'","Andy Warhol",["Warhol"]],
+    ["This Baroque sculptor and architect designed the <span class='hl'>colonnade of St. Peter's Square</span> and was the dominant artistic figure in 17th-century Rome.","Gian Lorenzo Bernini",["Bernini"]],
+    ["This French painter's '<span class='hl'>The Raft of the Medusa</span>' (1819) depicts the aftermath of a shipwreck and government scandal, becoming a landmark of Romanticism.","Theodore Gericault",["Gericault"]],
+    ["Considered the father of Impressionism, this French painter's '<span class='hl'>Olympia</span>' and '<span class='hl'>Luncheon on the Grass</span>' scandalized Paris, though he never exhibited with the Impressionists. Not Monet.","Edouard Manet",["Manet"]],
+    ["This Italian painter is considered <span class='hl'>the father of Baroque painting</span>. He used real people as models for biblical scenes and <span class='hl'>fled Rome after killing a man</span> in a brawl.","Caravaggio",[]],
+    ["A leading figure of Neo-Expressionism, this Brooklyn-born artist of <span class='hl'>Haitian and Puerto Rican descent</span> rose from graffiti under the tag <span class='hl'>SAMO</span> to gallery fame, dying at 27.","Jean-Michel Basquiat",["Basquiat"]],
+    ["This 16th-century Flemish painter of <span class='hl'>peasant scenes and landscapes</span> is famous for 'Hunters in the Snow' and 'The Tower of Babel.' His sons were also painters.","Pieter Bruegel the Elder",["Bruegel","Brueghel"]],
+    ["This French painter was a <span class='hl'>customs official</span> (douanier) with no formal training. His lush jungle scenes, like 'The Sleeping Gypsy,' inspired the Surrealists.","Henri Rousseau",["Rousseau"]],
+    ["This Austrian Expressionist, a <span class='hl'>protege of Gustav Klimt</span>, died at 28 during the <span class='hl'>1918 flu pandemic</span>. He was known for raw, angular self-portraits and nudes.","Egon Schiele",["Schiele"]],
+    ["This French artist, <span class='hl'>crippled in childhood accidents</span>, frequented Montmartre dance halls. His posters for the <span class='hl'>Moulin Rouge</span> revolutionized graphic design.","Henri de Toulouse-Lautrec",["Toulouse-Lautrec","Lautrec"]],
+    ["This Russian-born artist, considered a pioneer of <span class='hl'>abstract art</span>, published '<span class='hl'>Concerning the Spiritual in Art</span>' and was associated with Der Blaue Reiter.","Wassily Kandinsky",["Kandinsky"]],
+    ["This Italian sculptor working mostly in Paris was known for <span class='hl'>extremely elongated figures</span> with tiny heads. His 'Walking Man' sold for over $100 million at auction.","Alberto Giacometti",["Giacometti"]],
+    ["Born in Crete, this painter moved to Spain and developed a <span class='hl'>highly elongated style</span>. His adopted name literally means '<span class='hl'>The Greek</span>' in Spanish.","El Greco",[]],
+    ["This Mexican artist, married to <span class='hl'>Diego Rivera</span>, is known for intensely personal self-portraits. Her '<span class='hl'>Casa Azul</span>' (Blue House) in Coyoacan is now a museum.","Frida Kahlo",["Kahlo"]],
+    ["This Spanish artist, a contemporary and rival of Picasso, <span class='hl'>co-founded Cubism</span>. His collages using newspaper were among the first in fine art.","Georges Braque",["Braque"]],
+    ["This Dutch artist is best known for geometric abstractions using only <span class='hl'>primary colors, black, white, and grey</span> in a strict grid pattern.","Piet Mondrian",["Mondrian"]],
+    ["This Northern Renaissance master from Nuremberg was famous for <span class='hl'>woodcuts and engravings</span> including 'Melencolia I,' a rhinoceros, and a pair of praying hands.","Albrecht Durer",["Durer"]],
+    ["This American realist is best known for '<span class='hl'>Nighthawks</span>,' depicting four people in a <span class='hl'>late-night diner</span>, now in the Art Institute of Chicago.","Edward Hopper",["Hopper"]],
+
+    // TECHNIQUES & TERMS
+    ["What painting technique, from the Italian for '<span class='hl'>light-dark</span>,' describes dramatic contrast between light and shadow, pioneered by Caravaggio and Rembrandt?","chiaroscuro",[]],
+    ["What Leonardo da Vinci technique, meaning '<span class='hl'>smoky</span>' in Italian, creates a hazy effect by blending tones without visible lines or edges?","sfumato",[]],
+    ["What painting technique involves applying <span class='hl'>thick layers of paint</span> so brush or palette knife strokes are visible, used heavily by Van Gogh?","impasto",[]],
+    ["What technique, literally '<span class='hl'>deceives the eye</span>' in French, creates an optical illusion of three-dimensional space on a flat surface?","trompe l'oeil",["trompe loeil"]],
+    ["What is the art term for <span class='hl'>painting on wet plaster</span>, used by Michelangelo on the Sistine Chapel and by Leonardo on The Last Supper?","fresco",[]],
+    ["What Japanese art form of <span class='hl'>woodblock printing</span>, meaning 'pictures of the floating world,' heavily influenced the Impressionists?","ukiyo-e",["ukiyoe"]],
+    ["What early 20th-century movement, whose name means '<span class='hl'>wild beasts</span>' in French, used non-naturalistic, explosive color? Matisse was its leader.","Fauvism",["les fauves"]],
+    ["What art movement, launched by <span class='hl'>Filippo Marinetti's 1909 manifesto</span>, glorified speed, machinery, violence, and modernity?","Futurism",[]],
+    ["What is the technique of <span class='hl'>scratching through a surface layer</span> to reveal a contrasting color beneath, used in ceramics and painting?","sgraffito",[]],
+    ["What term from printmaking describes a print made from a <span class='hl'>carved wooden block</span>? Durer was its greatest practitioner.","woodcut",["woodblock"]],
+    ["What is the name for a <span class='hl'>three-paneled painting or altarpiece</span>, commonly used in medieval and Renaissance religious art?","triptych",[]],
+    ["What term describes a <span class='hl'>painting of everyday objects</span> like fruit, flowers, skulls, or household items arranged on a table?","still life",[]],
+    ["What art technique uses <span class='hl'>small distinct dots of pure color</span> placed side by side so they blend optically? Seurat pioneered it.","Pointillism",[]],
+
+    // MUSEUMS & LOCATIONS
     ["Which museum houses <span class='hl'>The Starry Night</span>?","Museum of Modern Art",["MoMA","MOMA"]],
     ["<span class='hl'>The Birth of Venus</span> and <span class='hl'>Primavera</span> hang in which Florence museum?","The Uffizi",["Uffizi","Uffizi Gallery"]],
     ["Which museum houses <span class='hl'>Guernica</span>?","Museo Reina Sofia",["Reina Sofia"]],
     ["<span class='hl'>The Night Watch</span> hangs in which Amsterdam museum?","Rijksmuseum",[]],
-    ["What Japanese art form of <span class='hl'>woodblock printing</span> influenced the Impressionists?","ukiyo-e",["ukiyoe"]],
-    ["What 19th-century English group of painters called themselves the <span class='hl'>Pre-Raphaelite Brotherhood</span>? Name one member.","John Everett Millais",["Millais","Dante Gabriel Rossetti","Rossetti","William Holman Hunt","Hunt"]],
-    ["Which artist created <span class='hl'>infinity rooms</span> filled with mirrors and LED lights?","Yayoi Kusama",["Kusama"]],
-    ["Which anonymous <span class='hl'>street artist</span> shredded his own painting at auction in 2018?","Banksy",[]],
-    ["Which British artist is known for works involving <span class='hl'>preserved animals in formaldehyde</span>, including a shark?","Damien Hirst",["Hirst"]],
-    ["What art movement centered in <span class='hl'>Italy around 1910</span> celebrated speed, technology, and modernity?","Futurism",[]],
-    ["Which Chinese artist and activist created <span class='hl'>Sunflower Seeds</span> at the Tate Modern?","Ai Weiwei",["Weiwei"]],
-    ["What term describes the <span class='hl'>arrangement of visual elements</span> in a painting \u2014 how the parts are organized?","composition",[]],
-    ["What is the art technique of <span class='hl'>scratching through a top layer to reveal a lower layer</span> of color?","sgraffito",[]],
-    ["Which German artist was famous for his <span class='hl'>woodcuts and engravings</span> including 'Melencolia I' and a rhinoceros?","Albrecht Durer",["Durer"]],
-    ["Which American painter is known for <span class='hl'>portraits of Gilded Age society</span>, including 'Madame X'?","John Singer Sargent",["Sargent"]],
-    ["Which artist painted <span class='hl'>distorted popes</span> inspired by Velazquez, and triptychs of contorted figures?","Francis Bacon",["Bacon"]],
-    ["What is the name for a painting of <span class='hl'>everyday objects like fruit, flowers, or household items</span>?","still life",[]],
-    ["What term describes a painting of a <span class='hl'>natural outdoor scene</span> \u2014 mountains, rivers, fields?","landscape",[]],
-    ["Which early 20th-century movement used <span class='hl'>wild, non-naturalistic color</span>? Its name means 'wild beasts' in French.","Fauvism",["les fauves"]]
+    ["<span class='hl'>Guernica</span> depicts the bombing of a Basque town during which country's civil war?","Spain",["Spanish"]],
+    ["The <span class='hl'>Mona Lisa</span> hangs behind bulletproof glass in which museum?","The Louvre",["Louvre"]],
+    ["<span class='hl'>The Art Institute of Chicago</span> is home to which famous Seurat painting depicting Parisians relaxing by the Seine?","A Sunday on La Grande Jatte",["Sunday on La Grande Jatte","Grande Jatte"]],
+
+    // MORE LL-STYLE
+    ["What 19th-century English group rejected industrialism and sought to return to the detail and color of art <span class='hl'>before Raphael</span>? Name the group or one member.","Pre-Raphaelite Brotherhood",["Pre-Raphaelites","John Everett Millais","Millais","Dante Gabriel Rossetti","Rossetti","William Holman Hunt","Hunt"]],
+    ["Which artist created <span class='hl'>infinity rooms</span> filled with mirrors and LED lights? Now in her 90s, she has been voluntarily living in a psychiatric institution in Tokyo since 1977.","Yayoi Kusama",["Kusama"]],
+    ["Which anonymous <span class='hl'>street artist</span> had a work self-shred at Sotheby's in 2018, moments after selling for over a million pounds?","Banksy",[]],
+    ["Which British artist is known for '<span class='hl'>The Physical Impossibility of Death in the Mind of Someone Living</span>' \u2014 a tiger shark preserved in formaldehyde?","Damien Hirst",["Hirst"]],
+    ["Which Chinese artist and activist filled the Tate Modern's Turbine Hall with 100 million hand-painted <span class='hl'>porcelain sunflower seeds</span>?","Ai Weiwei",["Weiwei"]],
+    ["Which American painter of the Gilded Age created '<span class='hl'>Madame X</span>,' a portrait so scandalous it forced him to move from Paris to London?","John Singer Sargent",["Sargent"]],
+    ["Which Irish-born painter is known for <span class='hl'>screaming popes</span> based on Velazquez's portrait of Innocent X, and violent triptychs of distorted figures?","Francis Bacon",["Bacon"]],
+    ["Which German-born British painter, grandson of Sigmund Freud, was known for <span class='hl'>unflinching nude portraits</span> painted with heavy impasto?","Lucian Freud",["Freud"]],
+    ["Rodin's <span class='hl'>The Thinker</span> was originally conceived as part of a larger work inspired by Dante. Name that larger work.","The Gates of Hell",["Gates of Hell"]],
+    ["What painting, originally titled '<span class='hl'>Arrangement in Grey and Black No. 1</span>,' is far better known by its popular name referencing the artist's mother?","Whistler's Mother",["Whistlers Mother"]],
+    ["This Northern Renaissance painter's '<span class='hl'>Arnolfini Portrait</span>' is famous for a convex mirror reflecting the entire room. He is also credited with perfecting <span class='hl'>oil painting</span>.","Jan van Eyck",["Van Eyck"]],
+    ["In Raphael's '<span class='hl'>The School of Athens</span>,' the two central figures represent Plato and which other Greek philosopher?","Aristotle",[]],
+    ["What artistic movement takes its name from a <span class='hl'>Claude Monet painting</span> of a harbor at sunrise, which a hostile critic used mockingly in an 1874 review?","Impressionism",[]],
+    ["Which 20th-century artist created '<span class='hl'>The Large Glass</span>' (The Bride Stripped Bare by Her Bachelors, Even) and effectively gave up art to play chess?","Marcel Duchamp",["Duchamp"]],
+    ["What is the term for an <span class='hl'>object found or purchased and presented as art</span>, pioneered by Duchamp with his urinal 'Fountain'?","readymade",["ready-made","ready made"]],
+    ["This Post-Impressionist left his career as a <span class='hl'>Parisian stockbroker</span> to paint full-time, eventually moving to <span class='hl'>Tahiti</span> where he painted the local people and landscapes.","Paul Gauguin",["Gauguin"]],
+    ["What Baroque technique, meaning '<span class='hl'>obscure</span>' in Italian, pushes chiaroscuro to an extreme by using large areas of deep shadow with a single dramatic light source?","tenebrism",["tenebrismo"]],
+    ["Name the style of Japanese art, popular from the 17th-19th centuries, whose subjects included <span class='hl'>kabuki actors, sumo wrestlers, and landscapes</span>. Hokusai's Great Wave is an example.","ukiyo-e",["ukiyoe"]],
+    ["This <span class='hl'>Venetian Renaissance</span> painter, known simply by one name, was famous for his use of rich color. His 'Venus of Urbino' influenced Manet's 'Olympia.'","Titian",["Tiziano"]]
 ];
 
 // ================================================================
@@ -750,11 +794,11 @@ function qArtTrivia() {
 
 function qArt() {
     const r = Math.random();
-    if (r<0.30) return qPainting();
-    if (r<0.40) return qSculpture();
-    if (r<0.55) return qArtMovement();
-    if (r<0.70) return qArtistNat();
-    return qArtTrivia();
+    if (r<0.50) return qArtTrivia();
+    if (r<0.65) return qPainting();
+    if (r<0.72) return qSculpture();
+    if (r<0.84) return qArtMovement();
+    return qArtistNat();
 }
 
 // --- MATH ---
