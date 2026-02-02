@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LL Prep</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: #0c1220;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(45,212,191,0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(45,212,191,0.04) 0%, transparent 50%);
+            min-height: 100vh;
+            color: #d4e0dc;
+        }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 1rem; }
+
+        .header { text-align: center; padding: 1.5rem 0 1rem; }
+        .header .icon { font-size: 2rem; display: block; margin-bottom: 0.3rem; }
+        .header h1 { font-size: 1.6rem; font-weight: 800; color: #2dd4bf; text-shadow: 0 0 20px rgba(45,212,191,0.3); }
+        .header .subtitle { font-size: 0.85rem; color: #6b8a80; margin-top: 0.3rem; }
+
+        .score-bar {
+            display: flex; justify-content: space-around;
+            background: rgba(255,255,255,0.05); border-radius: 20px;
+            padding: 0.6rem 1rem; margin-bottom: 1rem;
+            font-weight: 700; font-size: 0.85rem;
+            border: 1px solid rgba(45,212,191,0.15);
+        }
+        .score-bar span { color: #2dd4bf; }
+
+        .mode-select { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; justify-content: center; }
+        .mode-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(45,212,191,0.15);
+            border-radius: 10px; padding: 0.5rem 0.7rem; font-family: 'Nunito', sans-serif;
+            font-weight: 700; font-size: 0.75rem; color: #6b8a80; cursor: pointer; transition: all 0.2s;
+        }
+        .mode-btn:hover { background: rgba(45,212,191,0.1); border-color: rgba(45,212,191,0.3); }
+        .mode-btn.active { background: rgba(45,212,191,0.15); border-color: #2dd4bf; color: #2dd4bf; }
+
+        .card {
+            background: rgba(12,20,35,0.9); border-radius: 16px; padding: 1.5rem;
+            margin-bottom: 1rem; border: 1px solid rgba(45,212,191,0.12);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .q-label { font-size: 0.7rem; font-weight: 700; color: #2dd4bf; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; text-align: center; }
+        .q-text { font-size: 1.1rem; font-weight: 700; color: #d4e0dc; line-height: 1.4; margin-bottom: 1.2rem; text-align: center; }
+        .q-text .hl { color: #2dd4bf; }
+
+        .answer-area { display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
+        .answer-input {
+            width: 100%; background: rgba(255,255,255,0.08); border: 2px solid rgba(45,212,191,0.2);
+            border-radius: 12px; padding: 0.75rem 1rem; font-family: 'Nunito', sans-serif;
+            font-weight: 600; font-size: 1rem; color: #d4e0dc; outline: none; transition: border-color 0.2s;
+            text-align: center;
+        }
+        .answer-input::placeholder { color: #3a5a50; }
+        .answer-input:focus { border-color: rgba(45,212,191,0.5); }
+        .answer-input.correct { border-color: #32b450; background: rgba(50,180,80,0.1); }
+        .answer-input.wrong { border-color: #dc503c; background: rgba(220,80,60,0.1); }
+        .answer-btns { display: flex; gap: 0.5rem; width: 100%; }
+        .submit-btn {
+            flex: 1; background: linear-gradient(135deg, #2dd4bf, #20b2aa); border: none;
+            border-radius: 12px; padding: 0.7rem; font-family: 'Nunito', sans-serif;
+            font-weight: 700; font-size: 0.95rem; color: #0c1220; cursor: pointer; transition: all 0.2s;
+        }
+        .submit-btn:hover { box-shadow: 0 4px 15px rgba(45,212,191,0.3); }
+        .submit-btn:disabled { opacity: 0.4; cursor: default; box-shadow: none; }
+        .give-up-btn {
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(45,212,191,0.15);
+            border-radius: 12px; padding: 0.7rem 1rem; font-family: 'Nunito', sans-serif;
+            font-weight: 700; font-size: 0.85rem; color: #6b8a80; cursor: pointer; transition: all 0.2s;
+        }
+        .give-up-btn:hover { background: rgba(255,255,255,0.08); }
+
+        .feedback { text-align: center; padding: 0.8rem; font-weight: 700; font-size: 1rem; border-radius: 10px; margin-top: 1rem; display: none; }
+        .feedback.correct { display: block; background: rgba(50,180,80,0.1); color: #a0e8a0; border: 1px solid rgba(50,180,80,0.2); }
+        .feedback.wrong { display: block; background: rgba(220,80,60,0.1); color: #f0b0a0; border: 1px solid rgba(220,80,60,0.2); }
+        .feedback .fact { font-size: 0.8rem; color: #6b8a80; font-style: italic; margin-top: 0.3rem; }
+
+        .next-btn {
+            display: none; width: 100%; background: linear-gradient(135deg, #2dd4bf, #20b2aa);
+            border: none; border-radius: 12px; padding: 0.8rem; font-family: 'Nunito', sans-serif;
+            font-weight: 700; font-size: 1rem; color: #0c1220; cursor: pointer; margin-top: 0.8rem;
+        }
+        .next-btn:hover { box-shadow: 0 4px 15px rgba(45,212,191,0.3); }
+
+        .round-end { text-align: center; padding: 1rem; }
+        .round-end h2 { color: #2dd4bf; font-size: 1.4rem; margin-bottom: 0.3rem; }
+        .round-end .final-score { font-size: 2.5rem; font-weight: 800; color: #2dd4bf; margin: 0.5rem 0; }
+        .round-end .final-msg { font-size: 0.95rem; color: #b0c8c0; margin-bottom: 1rem; }
+        .play-btn {
+            background: linear-gradient(135deg, #2dd4bf, #20b2aa); border: none; border-radius: 12px;
+            padding: 0.8rem 2rem; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 1rem;
+            color: #0c1220; cursor: pointer;
+        }
+
+        .streak-msg { text-align: center; font-size: 0.8rem; color: #6b8a80; font-weight: 600; margin-top: 0.3rem; }
+
+        @media (max-width: 400px) {
+            .header h1 { font-size: 1.3rem; }
+            .q-text { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <span class="icon">📚</span>
+        <h1>LL Prep</h1>
+        <div class="subtitle">Classical Music, Art & Math</div>
+    </div>
+
+    <div class="score-bar">
+        <div>Q: <span id="qnum">1</span>/20</div>
+        <div>Score: <span id="score">0</span></div>
+        <div>Streak: <span id="streak">0</span></div>
+    </div>
+
+    <div class="mode-select">
+        <button class="mode-btn active" onclick="setMode('mix')">🎲 Mix</button>
+        <button class="mode-btn" onclick="setMode('music')">🎼 Music</button>
+        <button class="mode-btn" onclick="setMode('art')">🎨 Art</button>
+        <button class="mode-btn" onclick="setMode('math')">📐 Math</button>
+    </div>
+
+    <div class="card" id="card">
+        <div class="q-label" id="q-label"></div>
+        <div class="q-text" id="q-text"></div>
+        <div class="answer-area" id="answer-area"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next Question</button>
+    </div>
+    <div class="streak-msg" id="streak-msg"></div>
+</div>
+
+<script>
+// ================================================================
+// DATA
+// ================================================================
+
+// CLASSICAL MUSIC — Composer works: [composer, work]
+const cw = [
+    ["Bach","Brandenburg Concertos"],["Bach","Toccata and Fugue in D minor"],["Bach","The Well-Tempered Clavier"],
+    ["Bach","Mass in B minor"],["Bach","St Matthew Passion"],["Bach","Goldberg Variations"],
+    ["Handel","Messiah"],["Handel","Water Music"],["Handel","Music for the Royal Fireworks"],
+    ["Vivaldi","The Four Seasons"],["Vivaldi","Gloria"],
+    ["Haydn","The Creation"],["Haydn","Surprise Symphony"],
+    ["Mozart","Requiem"],["Mozart","Eine kleine Nachtmusik"],["Mozart","Symphony No. 40"],
+    ["Beethoven","Symphony No. 5"],["Beethoven","Symphony No. 9"],["Beethoven","Moonlight Sonata"],["Beethoven","Fur Elise"],
+    ["Schubert","Unfinished Symphony"],["Schubert","Ave Maria"],["Schubert","Trout Quintet"],
+    ["Chopin","Nocturnes"],["Chopin","Minute Waltz"],["Chopin","Revolutionary Etude"],
+    ["Brahms","Hungarian Dances"],["Brahms","Lullaby"],
+    ["Tchaikovsky","The Nutcracker"],["Tchaikovsky","Swan Lake"],["Tchaikovsky","1812 Overture"],
+    ["Tchaikovsky","Sleeping Beauty"],["Tchaikovsky","Piano Concerto No. 1"],
+    ["Wagner","Ride of the Valkyries"],["Wagner","Tristan und Isolde"],
+    ["Verdi","Aida"],["Verdi","La Traviata"],["Verdi","Rigoletto"],["Verdi","Nabucco"],
+    ["Puccini","La Boheme"],["Puccini","Tosca"],["Puccini","Madama Butterfly"],["Puccini","Turandot"],
+    ["Bizet","Carmen"],
+    ["Rossini","The Barber of Seville"],["Rossini","William Tell Overture"],
+    ["Dvorak","New World Symphony"],["Dvorak","Slavonic Dances"],
+    ["Debussy","Clair de Lune"],["Debussy","La Mer"],["Debussy","Prelude to the Afternoon of a Faun"],
+    ["Ravel","Bolero"],["Ravel","Daphnis et Chloe"],
+    ["Stravinsky","The Rite of Spring"],["Stravinsky","The Firebird"],["Stravinsky","Petrushka"],
+    ["Mahler","Symphony No. 5"],
+    ["Prokofiev","Peter and the Wolf"],["Prokofiev","Romeo and Juliet"],
+    ["Shostakovich","Symphony No. 7"],["Shostakovich","Symphony No. 5"],
+    ["Grieg","Peer Gynt"],["Grieg","Piano Concerto in A minor"],
+    ["Mendelssohn","A Midsummer Night's Dream"],["Mendelssohn","Wedding March"],
+    ["Liszt","Hungarian Rhapsodies"],["Liszt","Liebestraum"],
+    ["Johann Strauss II","The Blue Danube"],["Johann Strauss II","Die Fledermaus"],
+    ["Richard Strauss","Also sprach Zarathustra"],["Richard Strauss","Der Rosenkavalier"],
+    ["Mussorgsky","Pictures at an Exhibition"],["Mussorgsky","Night on Bald Mountain"],
+    ["Rimsky-Korsakov","Scheherazade"],["Rimsky-Korsakov","Flight of the Bumblebee"],
+    ["Saint-Saens","Carnival of the Animals"],["Saint-Saens","Danse Macabre"],
+    ["Holst","The Planets"],
+    ["Copland","Appalachian Spring"],["Copland","Fanfare for the Common Man"],["Copland","Rodeo"],
+    ["Gershwin","Rhapsody in Blue"],["Gershwin","An American in Paris"],
+    ["Barber","Adagio for Strings"],
+    ["Rachmaninoff","Piano Concerto No. 2"],["Rachmaninoff","Rhapsody on a Theme of Paganini"],
+    ["Sibelius","Finlandia"],
+    ["Elgar","Pomp and Circumstance"],["Elgar","Enigma Variations"],
+    ["Berlioz","Symphonie fantastique"],
+    ["Smetana","The Moldau"],
+    ["John Cage","4'33\""],
+    ["Philip Glass","Einstein on the Beach"],
+    ["Bernstein","West Side Story"],
+    ["Orff","Carmina Burana"],
+    ["Pachelbel","Canon in D"],
+    ["Satie","Gymnopedie No. 1"]
+];
+
+// Operas: [opera, composer]
+const operas = [
+    ["The Magic Flute","Mozart"],["Don Giovanni","Mozart"],["The Marriage of Figaro","Mozart"],
+    ["Fidelio","Beethoven"],
+    ["The Barber of Seville","Rossini"],["William Tell","Rossini"],
+    ["La Boheme","Puccini"],["Tosca","Puccini"],["Madama Butterfly","Puccini"],["Turandot","Puccini"],
+    ["Aida","Verdi"],["La Traviata","Verdi"],["Rigoletto","Verdi"],["Otello","Verdi"],["Nabucco","Verdi"],
+    ["Carmen","Bizet"],
+    ["The Ring Cycle","Wagner"],["Tristan und Isolde","Wagner"],["The Flying Dutchman","Wagner"],
+    ["Die Fledermaus","Johann Strauss II"],
+    ["Der Rosenkavalier","Richard Strauss"],
+    ["Porgy and Bess","Gershwin"],
+    ["The Tales of Hoffmann","Offenbach"],
+    ["Norma","Bellini"],
+    ["Lucia di Lammermoor","Donizetti"],
+    ["Boris Godunov","Mussorgsky"],
+    ["Eugene Onegin","Tchaikovsky"],
+    ["Hansel and Gretel","Humperdinck"],
+    ["Wozzeck","Berg"]
+];
+
+// Composer eras: [composer, era]
+const cEras = [
+    ["Bach","Baroque"],["Handel","Baroque"],["Vivaldi","Baroque"],["Pachelbel","Baroque"],
+    ["Haydn","Classical"],["Mozart","Classical"],
+    ["Beethoven","Classical and Romantic"],
+    ["Schubert","Romantic"],["Chopin","Romantic"],["Brahms","Romantic"],["Tchaikovsky","Romantic"],
+    ["Wagner","Romantic"],["Verdi","Romantic"],["Puccini","Romantic"],["Bizet","Romantic"],
+    ["Rossini","Romantic"],["Dvorak","Romantic"],["Grieg","Romantic"],["Mendelssohn","Romantic"],
+    ["Liszt","Romantic"],["Schumann","Romantic"],["Mahler","Romantic"],["Berlioz","Romantic"],
+    ["Johann Strauss II","Romantic"],["Smetana","Romantic"],
+    ["Mussorgsky","Romantic"],["Rimsky-Korsakov","Romantic"],["Saint-Saens","Romantic"],
+    ["Rachmaninoff","Romantic"],["Sibelius","Romantic"],["Elgar","Romantic"],
+    ["Debussy","Impressionist"],["Ravel","Impressionist"],["Satie","Impressionist"],
+    ["Stravinsky","Modern"],["Prokofiev","Modern"],["Shostakovich","Modern"],
+    ["Holst","Modern"],["Copland","Modern"],["Barber","Modern"],
+    ["Gershwin","Modern"],["Bernstein","Modern"],["Orff","Modern"],
+    ["John Cage","Avant-garde"],["Philip Glass","Minimalist"]
+];
+
+// Composer nationalities: [composer, nationality]
+const cNat = [
+    ["Bach","German"],["Handel","German"],["Beethoven","German"],["Brahms","German"],
+    ["Mendelssohn","German"],["Wagner","German"],["Richard Strauss","German"],
+    ["Schumann","German"],["Orff","German"],["Pachelbel","German"],
+    ["Haydn","Austrian"],["Mozart","Austrian"],["Schubert","Austrian"],
+    ["Mahler","Austrian"],["Johann Strauss II","Austrian"],
+    ["Vivaldi","Italian"],["Verdi","Italian"],["Puccini","Italian"],["Rossini","Italian"],
+    ["Tchaikovsky","Russian"],["Stravinsky","Russian"],["Prokofiev","Russian"],
+    ["Shostakovich","Russian"],["Mussorgsky","Russian"],["Rimsky-Korsakov","Russian"],
+    ["Rachmaninoff","Russian"],
+    ["Debussy","French"],["Ravel","French"],["Bizet","French"],["Saint-Saens","French"],
+    ["Satie","French"],["Berlioz","French"],["Offenbach","French"],
+    ["Chopin","Polish"],["Dvorak","Czech"],["Smetana","Czech"],["Grieg","Norwegian"],
+    ["Liszt","Hungarian"],["Sibelius","Finnish"],
+    ["Elgar","English"],["Holst","English"],
+    ["Copland","American"],["Gershwin","American"],["Barber","American"],
+    ["Bernstein","American"],["John Cage","American"],["Philip Glass","American"]
+];
+
+// Music trivia clues: [question_html, answer, alt_answers]
+const musicTrivia = [
+    ["<span class='hl'>Fidelio</span> is the only opera by which composer?","Beethoven",[]],
+    ["Which composer was deaf when he composed his <span class='hl'>Ninth Symphony</span>?","Beethoven",[]],
+    ["Which Russian composed <span class='hl'>The Nutcracker</span>, <span class='hl'>Swan Lake</span>, and <span class='hl'>Sleeping Beauty</span>?","Tchaikovsky",[]],
+    ["Which Baroque composer wrote over 500 concertos and was known as <span class='hl'>The Red Priest</span>?","Vivaldi",[]],
+    ["<span class='hl'>The Ring Cycle</span> is a set of four operas by which German composer?","Wagner",[]],
+    ["Which American composed <span class='hl'>Appalachian Spring</span> and <span class='hl'>Fanfare for the Common Man</span>?","Copland",[]],
+    ["Whose <span class='hl'>Also sprach Zarathustra</span> was featured in <span class='hl'>2001: A Space Odyssey</span>?","Richard Strauss",["Strauss"]],
+    ["Which composer's Sixth Symphony is nicknamed the <span class='hl'>Pathetique</span>?","Tchaikovsky",[]],
+    ["Which composer wrote a famous piece consisting of <span class='hl'>4 minutes and 33 seconds of silence</span>?","John Cage",["Cage"]],
+    ["Which American composer blended jazz and classical in <span class='hl'>Rhapsody in Blue</span>?","Gershwin",[]],
+    ["What term describes singing <span class='hl'>without instrumental accompaniment</span>?","a cappella",["acapella"]],
+    ["What is the musical term for <span class='hl'>gradually getting louder</span>?","crescendo",[]]
+];
+
+// ================================================================
+// ART
+// ================================================================
+
+// Paintings/artworks: [title, artist]
+const paintings = [
+    ["Mona Lisa","Leonardo da Vinci"],["The Last Supper","Leonardo da Vinci"],
+    ["The Creation of Adam","Michelangelo"],
+    ["The School of Athens","Raphael"],
+    ["The Birth of Venus","Botticelli"],
+    ["Girl with a Pearl Earring","Vermeer"],["The Milkmaid","Vermeer"],
+    ["The Night Watch","Rembrandt"],
+    ["Las Meninas","Velazquez"],
+    ["The Starry Night","Vincent van Gogh"],["Sunflowers","Vincent van Gogh"],["The Bedroom","Vincent van Gogh"],
+    ["Water Lilies","Claude Monet"],["Impression Sunrise","Claude Monet"],
+    ["A Sunday on La Grande Jatte","Georges Seurat"],
+    ["The Scream","Edvard Munch"],
+    ["The Persistence of Memory","Salvador Dali"],
+    ["Guernica","Pablo Picasso"],["Les Demoiselles d'Avignon","Pablo Picasso"],["Girl Before a Mirror","Pablo Picasso"],
+    ["The Son of Man","Rene Magritte"],["The Treachery of Images","Rene Magritte"],
+    ["Campbell's Soup Cans","Andy Warhol"],["Gold Marilyn Monroe","Andy Warhol"],
+    ["Drowning Girl","Roy Lichtenstein"],
+    ["American Gothic","Grant Wood"],
+    ["Nighthawks","Edward Hopper"],
+    ["Christina's World","Andrew Wyeth"],
+    ["The Kiss","Gustav Klimt"],
+    ["The Dance","Henri Matisse"],
+    ["The Great Wave off Kanagawa","Hokusai"],
+    ["Fountain","Marcel Duchamp"],
+    ["Liberty Leading the People","Eugene Delacroix"],
+    ["Whistler's Mother","James McNeill Whistler"],
+    ["A Bar at the Folies-Bergere","Edouard Manet"],["Olympia","Edouard Manet"],["Luncheon on the Grass","Edouard Manet"],
+    ["The Garden of Earthly Delights","Hieronymus Bosch"],
+    ["The Arnolfini Portrait","Jan van Eyck"],
+    ["The Third of May 1808","Francisco Goya"],["Saturn Devouring His Son","Francisco Goya"],
+    ["Black Square","Kazimir Malevich"],
+    ["Broadway Boogie Woogie","Piet Mondrian"],
+    ["No. 5 1948","Jackson Pollock"],
+    ["Flag","Jasper Johns"],
+    ["The Two Fridas","Frida Kahlo"],
+    ["The Sleeping Gypsy","Henri Rousseau"],
+    ["The Fighting Temeraire","J.M.W. Turner"],
+    ["The Hay Wain","John Constable"],
+    ["At the Moulin Rouge","Henri de Toulouse-Lautrec"],
+    ["The Swing","Jean-Honore Fragonard"],
+    ["Judith Slaying Holofernes","Artemisia Gentileschi"],
+    ["The Child's Bath","Mary Cassatt"]
+];
+
+// Sculptures: [title, sculptor]
+const sculptures = [
+    ["David","Michelangelo"],["Pieta","Michelangelo"],
+    ["The Thinker","Auguste Rodin"],["The Kiss","Auguste Rodin"],["The Gates of Hell","Auguste Rodin"],
+    ["Ecstasy of Saint Teresa","Gian Lorenzo Bernini"],["Apollo and Daphne","Gian Lorenzo Bernini"],
+    ["Bird in Space","Constantin Brancusi"],
+    ["Walking Man","Alberto Giacometti"],
+    ["Balloon Dog","Jeff Koons"],
+    ["Spiral Jetty","Robert Smithson"]
+];
+
+// Artist movements: [artist, movement]
+const aMov = [
+    ["Leonardo da Vinci","Renaissance"],["Michelangelo","Renaissance"],["Raphael","Renaissance"],
+    ["Botticelli","Renaissance"],["Titian","Renaissance"],["Donatello","Renaissance"],
+    ["Caravaggio","Baroque"],["Rembrandt","Baroque"],["Vermeer","Baroque"],
+    ["Rubens","Baroque"],["Velazquez","Baroque"],["Artemisia Gentileschi","Baroque"],
+    ["Jean-Honore Fragonard","Rococo"],
+    ["Jacques-Louis David","Neoclassicism"],
+    ["Eugene Delacroix","Romanticism"],["J.M.W. Turner","Romanticism"],["Francisco Goya","Romanticism"],
+    ["Gustave Courbet","Realism"],
+    ["Claude Monet","Impressionism"],["Pierre-Auguste Renoir","Impressionism"],
+    ["Edgar Degas","Impressionism"],["Berthe Morisot","Impressionism"],
+    ["Edouard Manet","Impressionism"],["Mary Cassatt","Impressionism"],
+    ["Vincent van Gogh","Post-Impressionism"],["Paul Cezanne","Post-Impressionism"],
+    ["Paul Gauguin","Post-Impressionism"],["Georges Seurat","Post-Impressionism"],
+    ["Henri de Toulouse-Lautrec","Post-Impressionism"],
+    ["Edvard Munch","Expressionism"],
+    ["Henri Matisse","Fauvism"],
+    ["Pablo Picasso","Cubism"],["Georges Braque","Cubism"],
+    ["Marcel Duchamp","Dada"],
+    ["Salvador Dali","Surrealism"],["Rene Magritte","Surrealism"],["Joan Miro","Surrealism"],["Max Ernst","Surrealism"],
+    ["Frida Kahlo","Surrealism"],
+    ["Jackson Pollock","Abstract Expressionism"],["Mark Rothko","Abstract Expressionism"],
+    ["Willem de Kooning","Abstract Expressionism"],
+    ["Andy Warhol","Pop Art"],["Roy Lichtenstein","Pop Art"],["Jasper Johns","Pop Art"],
+    ["Piet Mondrian","De Stijl"],["Kazimir Malevich","Suprematism"],
+    ["Gustav Klimt","Art Nouveau"],
+    ["Diego Rivera","Muralism"]
+];
+
+// Artist nationalities: [artist, nationality]
+const aNat = [
+    ["Leonardo da Vinci","Italian"],["Michelangelo","Italian"],["Raphael","Italian"],
+    ["Botticelli","Italian"],["Caravaggio","Italian"],["Titian","Italian"],["Artemisia Gentileschi","Italian"],
+    ["Rembrandt","Dutch"],["Vermeer","Dutch"],["Vincent van Gogh","Dutch"],["Piet Mondrian","Dutch"],
+    ["Hieronymus Bosch","Dutch"],
+    ["Rubens","Flemish"],["Jan van Eyck","Flemish"],
+    ["Velazquez","Spanish"],["Francisco Goya","Spanish"],["Pablo Picasso","Spanish"],
+    ["Salvador Dali","Spanish"],["Joan Miro","Spanish"],
+    ["Claude Monet","French"],["Pierre-Auguste Renoir","French"],["Edgar Degas","French"],
+    ["Paul Cezanne","French"],["Henri Matisse","French"],["Auguste Rodin","French"],
+    ["Georges Seurat","French"],["Eugene Delacroix","French"],["Edouard Manet","French"],
+    ["Paul Gauguin","French"],["Marcel Duchamp","French"],["Henri de Toulouse-Lautrec","French"],
+    ["Henri Rousseau","French"],
+    ["Jackson Pollock","American"],["Andy Warhol","American"],["Edward Hopper","American"],
+    ["Andrew Wyeth","American"],["Grant Wood","American"],["Roy Lichtenstein","American"],
+    ["Jasper Johns","American"],["Alexander Calder","American"],["Mary Cassatt","American"],
+    ["Gustav Klimt","Austrian"],
+    ["Edvard Munch","Norwegian"],
+    ["Rene Magritte","Belgian"],
+    ["J.M.W. Turner","English"],["John Constable","English"],
+    ["Constantin Brancusi","Romanian"],
+    ["Alberto Giacometti","Swiss"],
+    ["Wassily Kandinsky","Russian"],["Kazimir Malevich","Russian"],
+    ["Hokusai","Japanese"],
+    ["Frida Kahlo","Mexican"],["Diego Rivera","Mexican"]
+];
+
+// Art trivia clues: [question_html, answer, alt_answers]
+const artTrivia = [
+    ["Whose painting <span class='hl'>Impression, Sunrise</span> gave the Impressionist movement its name?","Claude Monet",["Monet"]],
+    ["Which artist famously <span class='hl'>cut off part of his own ear</span>?","Vincent van Gogh",["Van Gogh"]],
+    ["Which artist is known for paintings of <span class='hl'>melting clocks</span>?","Salvador Dali",["Dali"]],
+    ["Which artist submitted a <span class='hl'>urinal signed 'R. Mutt'</span> as a work of art?","Marcel Duchamp",["Duchamp"]],
+    ["Which artist <span class='hl'>painted the ceiling of the Sistine Chapel</span>?","Michelangelo",[]],
+    ["Which Mexican artist is known for <span class='hl'>self-portraits featuring her unibrow</span>?","Frida Kahlo",["Kahlo"]],
+    ["The <span class='hl'>Mona Lisa</span> hangs in which museum?","The Louvre",["Louvre"]],
+    ["What art technique uses <span class='hl'>small dots of color</span> to form an image?","Pointillism",[]],
+    ["Which French Impressionist is best known for paintings of <span class='hl'>ballet dancers</span>?","Edgar Degas",["Degas"]],
+    ["<span class='hl'>The Starry Night</span> was painted while this artist was in an asylum in Saint-Remy.","Vincent van Gogh",["Van Gogh"]],
+    ["Which sculptor is known for <span class='hl'>large mobile sculptures</span> that move with air currents?","Alexander Calder",["Calder"]],
+    ["Which art movement literally means <span class='hl'>'new art'</span> and featured organic, flowing lines around 1900?","Art Nouveau",[]]
+];
+
+// ================================================================
+// MATH
+// ================================================================
+
+// Mathematicians: [name, known_for_description]
+const mathPeople = [
+    ["Euclid","writing the <span class='hl'>Elements</span>, the foundational text of geometry"],
+    ["Pythagoras","the <span class='hl'>Pythagorean theorem</span> (a\u00B2 + b\u00B2 = c\u00B2)"],
+    ["Archimedes","calculating <span class='hl'>pi</span>, the principle of buoyancy, and levers"],
+    ["Fibonacci","the <span class='hl'>Fibonacci sequence</span> (1, 1, 2, 3, 5, 8, 13...)"],
+    ["Rene Descartes","<span class='hl'>Cartesian coordinates</span> and analytic geometry"],
+    ["Isaac Newton","co-inventing <span class='hl'>calculus</span> and the laws of motion"],
+    ["Gottfried Leibniz","co-inventing <span class='hl'>calculus</span> and its modern notation"],
+    ["Leonhard Euler","<span class='hl'>graph theory</span>, the number <span class='hl'>e</span>, and being the most prolific mathematician in history"],
+    ["Carl Friedrich Gauss","number theory, calling him the <span class='hl'>Prince of Mathematicians</span>, and the normal distribution"],
+    ["Pierre de Fermat","<span class='hl'>Fermat's Last Theorem</span> and probability theory"],
+    ["Blaise Pascal","<span class='hl'>Pascal's triangle</span>, probability theory, and Pascal's wager"],
+    ["Evariste Galois","<span class='hl'>group theory</span> — he died in a duel at age 20"],
+    ["Bernhard Riemann","the <span class='hl'>Riemann hypothesis</span> and non-Euclidean geometry"],
+    ["Georg Cantor","<span class='hl'>set theory</span> and proving there are different sizes of infinity"],
+    ["Kurt Godel","the <span class='hl'>incompleteness theorems</span>"],
+    ["Alan Turing","the <span class='hl'>Turing machine</span> and breaking the Enigma code"],
+    ["Srinivasa Ramanujan","extraordinary self-taught contributions to <span class='hl'>number theory</span> and infinite series"],
+    ["Emmy Noether","<span class='hl'>abstract algebra</span> and Noether's theorem linking symmetry to conservation laws"],
+    ["John Nash","<span class='hl'>Nash equilibrium</span> in game theory (depicted in A Beautiful Mind)"],
+    ["Paul Erdos","prolific collaboration in <span class='hl'>combinatorics</span> — the Erdos number measures distance from him"],
+    ["Benoit Mandelbrot","<span class='hl'>fractal geometry</span> and the Mandelbrot set"],
+    ["Andrew Wiles","proving <span class='hl'>Fermat's Last Theorem</span> in 1995"],
+    ["Ada Lovelace","writing the <span class='hl'>first computer algorithm</span>, for Babbage's Analytical Engine"],
+    ["al-Khwarizmi","<span class='hl'>algebra</span> — the word comes from the title of his book"]
+];
+
+// Math terms: [term, definition_clue]
+const mathTerms = [
+    ["prime number","a number divisible <span class='hl'>only by 1 and itself</span>"],
+    ["Fibonacci sequence","a sequence where each number is the <span class='hl'>sum of the two before it</span>"],
+    ["pi","the ratio of a circle's <span class='hl'>circumference to its diameter</span>, approximately 3.14159"],
+    ["Euler's number","the mathematical constant <span class='hl'>e</span>, approximately 2.71828, the base of natural logarithms"],
+    ["golden ratio","approximately <span class='hl'>1.618</span>, found in the Fibonacci sequence, art, and nature"],
+    ["Mobius strip","a surface with <span class='hl'>only one side</span>, made by giving a strip a half-twist"],
+    ["fractal","a <span class='hl'>self-similar pattern</span> that repeats at different scales"],
+    ["asymptote","a line that a curve <span class='hl'>approaches but never touches</span>"],
+    ["factorial","the product of all positive integers up to n, written <span class='hl'>n!</span>"],
+    ["logarithm","the <span class='hl'>inverse of exponentiation</span>"],
+    ["derivative","the <span class='hl'>rate of change</span> of a function, from calculus"],
+    ["integral","the <span class='hl'>area under a curve</span>, from calculus"],
+    ["normal distribution","the <span class='hl'>bell curve</span> in statistics"],
+    ["topology","the study of properties preserved through <span class='hl'>continuous deformation</span>"],
+    ["imaginary number","<span class='hl'>the square root of negative one</span>, denoted i"],
+    ["googol","the number <span class='hl'>10 raised to the power of 100</span>"],
+    ["irrational number","a number that <span class='hl'>cannot be expressed as a simple fraction</span>, like pi or the square root of 2"],
+    ["Bayes' theorem","a formula for <span class='hl'>updating probability based on new evidence</span>"],
+    ["proof by contradiction","assuming the opposite of what you want to prove, then showing it leads to a <span class='hl'>logical impossibility</span>"],
+    ["matrix","a <span class='hl'>rectangular array of numbers</span> arranged in rows and columns"],
+    ["hypotenuse","the <span class='hl'>longest side of a right triangle</span>, opposite the right angle"],
+    ["Nash equilibrium","a state where <span class='hl'>no player benefits from changing strategy alone</span>"]
+];
+
+// Math facts: [question, answer, alt_answers]
+const mathFacts = [
+    ["What is the <span class='hl'>only even prime number</span>?","2",["two"]],
+    ["How many <span class='hl'>Platonic solids</span> are there?","5",["five"]],
+    ["What is <span class='hl'>0!</span> (zero factorial)?","1",["one"]],
+    ["How many faces does a <span class='hl'>dodecahedron</span> have?","12",["twelve"]],
+    ["How many faces does an <span class='hl'>icosahedron</span> have?","20",["twenty"]],
+    ["What is the <span class='hl'>seventh Fibonacci number</span> (starting 1, 1, 2, 3, 5...)?","13",["thirteen"]],
+    ["What is <span class='hl'>7!</span> (7 factorial)?","5040",[]],
+    ["How many degrees in the <span class='hl'>interior angles of a triangle</span>?","180",["180 degrees"]],
+    ["What number system uses only <span class='hl'>0 and 1</span>?","binary",["base 2"]],
+    ["What is the <span class='hl'>smallest perfect number</span>?","6",["six"]],
+    ["What is the <span class='hl'>square root of 144</span>?","12",["twelve"]],
+    ["How many sides does a <span class='hl'>heptagon</span> have?","7",["seven"]],
+    ["What is <span class='hl'>e</span> approximately equal to (to two decimal places)?","2.72",["2.71","2.718","2.71828"]],
+    ["How many edges does a <span class='hl'>cube</span> have?","12",["twelve"]]
+];
+
+// Math trivia clues: [question_html, answer, alt_answers]
+const mathTrivia = [
+    ["Which mathematician <span class='hl'>died in a duel at age 20</span>?","Evariste Galois",["Galois"]],
+    ["Whose <span class='hl'>Last Theorem</span> took 358 years to prove?","Pierre de Fermat",["Fermat"]],
+    ["What machine did <span class='hl'>Alan Turing</span> help crack during World War II?","Enigma",["enigma machine"]],
+    ["Which self-taught Indian mathematician sent extraordinary formulas to <span class='hl'>G.H. Hardy</span> in 1913?","Srinivasa Ramanujan",["Ramanujan"]],
+    ["What is the <span class='hl'>longest side of a right triangle</span> called?","hypotenuse",[]],
+    ["What branch of mathematics gets its name from a book by <span class='hl'>al-Khwarizmi</span>?","algebra",[]],
+    ["What theorem states that any map can be colored with at most <span class='hl'>four colors</span>?","four color theorem",["four colour theorem","4 color theorem"]],
+    ["What word for a step-by-step procedure comes from the name <span class='hl'>al-Khwarizmi</span>?","algorithm",[]],
+    ["Which ancient Greek proved there are <span class='hl'>infinitely many prime numbers</span>?","Euclid",[]],
+    ["Who wrote <span class='hl'>A Mathematician's Apology</span>?","G.H. Hardy",["Hardy"]]
+];
+
+// ================================================================
+// GAME LOGIC
+// ================================================================
+
+const ROUND_LENGTH = 20;
+let mode = 'mix';
+let score = 0, total = 0, streak = 0, bestStreak = 0, answered = false;
+let currentQ = null;
+
+function shuffle(a) { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
+function pickR(a) { return a[Math.floor(Math.random()*a.length)]; }
+
+const goodMsgs = ["Correct!","Nailed it!","That's right!","You got it!","Nice one!","Exactly!"];
+const badMsgs = ["Not quite!","Oops!","Close!","Good guess, but...","Not this time!"];
+
+// ================================================================
+// FUZZY MATCHING
+// ================================================================
+
+function normalize(s) {
+    return s.toLowerCase().replace(/<[^>]*>/g,'').replace(/[^a-z0-9 ]/g,'').replace(/\b(the|a|an)\b/g,'').replace(/\s+/g,' ').trim();
+}
+function lastName(s) {
+    const parts = s.replace(/<[^>]*>/g,'').trim().split(/\s+/);
+    return parts[parts.length-1];
+}
+function levenshtein(a,b) {
+    const m=a.length, n=b.length;
+    const d=Array.from({length:m+1},()=>Array(n+1).fill(0));
+    for(let i=0;i<=m;i++) d[i][0]=i;
+    for(let j=0;j<=n;j++) d[0][j]=j;
+    for(let i=1;i<=m;i++) for(let j=1;j<=n;j++) {
+        d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));
+    }
+    return d[m][n];
+}
+function personAlts(name) {
+    const clean = name.replace(/<[^>]*>/g,'');
+    const alts = [lastName(clean)];
+    const parts = clean.split(/\s+/);
+    if (parts.length > 2) alts.push(parts[0] + ' ' + parts[parts.length-1]);
+    if (clean.includes("Leonardo da Vinci")) alts.push("Leonardo","da Vinci","Da Vinci");
+    if (clean.includes("van Gogh")) alts.push("Van Gogh","van Gogh");
+    if (clean.includes("Strauss II")) alts.push("Strauss","Johann Strauss");
+    if (clean.includes("Toulouse-Lautrec")) alts.push("Toulouse-Lautrec","Lautrec");
+    return alts;
+}
+function fuzzyMatch(input, answer, alts) {
+    const ni = normalize(input);
+    const na = normalize(answer);
+    if (!ni) return false;
+    if (ni === na) return true;
+    if (alts) for (const alt of alts) { if (ni === normalize(alt)) return true; }
+    const threshold = Math.max(1, Math.floor(na.length * 0.15));
+    if (levenshtein(ni, na) <= threshold) return true;
+    if (alts) for (const alt of alts) {
+        const nalt = normalize(alt);
+        if (nalt && levenshtein(ni, nalt) <= Math.max(1, Math.floor(nalt.length * 0.15))) return true;
+    }
+    if (/^\d+$/.test(na)) return false;
+    if (ni.length >= 4 && (ni.includes(na) || na.includes(ni))) return true;
+    return false;
+}
+
+function stripHtml(s) { return s.replace(/<[^>]*>/g,''); }
+
+// ================================================================
+// QUESTION GENERATORS
+// ================================================================
+
+// --- MUSIC ---
+function qComposerWork() {
+    const e = pickR(cw);
+    if (Math.random()<0.7) {
+        return { label:"Classical Music", text:`Who composed <span class="hl">${e[1]}</span>?`, answer:e[0], alts:personAlts(e[0]), fact:`${e[0]} \u2014 ${e[1]}` };
+    } else {
+        const allWorks = cw.filter(x=>x[0]===e[0]).map(x=>x[1]);
+        return { label:"Classical Music", text:`Name a famous work by <span class="hl">${e[0]}</span>.`, answer:e[1], alts:allWorks, fact:`Works: ${allWorks.join(", ")}` };
+    }
+}
+function qOpera() {
+    const e = pickR(operas);
+    return { label:"Opera", text:`Who composed the opera <span class="hl">${e[0]}</span>?`, answer:e[1], alts:personAlts(e[1]), fact:`${e[0]} by ${e[1]}` };
+}
+function qComposerEra() {
+    const e = pickR(cEras);
+    return { label:"Classical Music", text:`<span class="hl">${e[0]}</span> belongs to which musical era or period?`, answer:e[1], fact:`${e[0]} \u2014 ${e[1]}` };
+}
+function qComposerNat() {
+    const e = pickR(cNat);
+    return { label:"Classical Music", text:`What nationality was composer <span class="hl">${e[0]}</span>?`, answer:e[1], fact:`${e[0]} was ${e[1]}` };
+}
+function qMusicTrivia() {
+    const e = pickR(musicTrivia);
+    return { label:"Classical Music", text:e[0], answer:e[1], alts:[...e[2],...personAlts(e[1])], fact:stripHtml(e[1]) };
+}
+
+function qMusic() {
+    const r = Math.random();
+    if (r<0.30) return qComposerWork();
+    if (r<0.45) return qOpera();
+    if (r<0.60) return qComposerEra();
+    if (r<0.75) return qComposerNat();
+    return qMusicTrivia();
+}
+
+// --- ART ---
+function qPainting() {
+    const e = pickR(paintings);
+    if (Math.random()<0.7) {
+        return { label:"Art", text:`Who created <span class="hl">${e[0]}</span>?`, answer:e[1], alts:personAlts(e[1]), fact:`${e[0]} by ${e[1]}` };
+    } else {
+        const allWorks = paintings.filter(x=>x[1]===e[1]).map(x=>x[0]);
+        return { label:"Art", text:`Name a famous work by <span class="hl">${e[1]}</span>.`, answer:e[0], alts:allWorks, fact:`Works: ${allWorks.join(", ")}` };
+    }
+}
+function qSculpture() {
+    const e = pickR(sculptures);
+    return { label:"Sculpture", text:`Who created the sculpture <span class="hl">${e[0]}</span>?`, answer:e[1], alts:personAlts(e[1]), fact:`${e[0]} by ${e[1]}` };
+}
+function qArtMovement() {
+    const e = pickR(aMov);
+    if (Math.random()<0.5) {
+        return { label:"Art", text:`<span class="hl">${e[0]}</span> was a key figure in which art movement?`, answer:e[1], fact:`${e[0]} \u2014 ${e[1]}` };
+    } else {
+        const artists = aMov.filter(x=>x[1]===e[1]);
+        return { label:"Art", text:`Name an artist associated with <span class="hl">${e[1]}</span>.`,
+            answer:artists[0][0], alts:artists.flatMap(x=>[x[0],...personAlts(x[0])]),
+            fact:`${e[1]}: ${artists.map(x=>x[0]).join(", ")}` };
+    }
+}
+function qArtistNat() {
+    const e = pickR(aNat);
+    return { label:"Art", text:`What nationality was artist <span class="hl">${e[0]}</span>?`, answer:e[1], fact:`${e[0]} was ${e[1]}` };
+}
+function qArtTrivia() {
+    const e = pickR(artTrivia);
+    return { label:"Art", text:e[0], answer:e[1], alts:[...e[2],...personAlts(e[1])], fact:stripHtml(e[1]) };
+}
+
+function qArt() {
+    const r = Math.random();
+    if (r<0.30) return qPainting();
+    if (r<0.40) return qSculpture();
+    if (r<0.55) return qArtMovement();
+    if (r<0.70) return qArtistNat();
+    return qArtTrivia();
+}
+
+// --- MATH ---
+function qMathPerson() {
+    const e = pickR(mathPeople);
+    return { label:"Math", text:`Who is known for ${e[1]}?`, answer:e[0], alts:personAlts(e[0]), fact:stripHtml(e[0]) };
+}
+function qMathTerm() {
+    const e = pickR(mathTerms);
+    return { label:"Math", text:`What mathematical concept: ${e[1]}?`, answer:e[0], fact:`${e[0]}` };
+}
+function qMathFact() {
+    const e = pickR(mathFacts);
+    return { label:"Math", text:e[0], answer:e[1], alts:e[2], fact:`Answer: ${e[1]}` };
+}
+function qMathTrivia() {
+    const e = pickR(mathTrivia);
+    return { label:"Math", text:e[0], answer:e[1], alts:[...e[2],...personAlts(e[1])], fact:stripHtml(e[1]) };
+}
+
+function qMath() {
+    const r = Math.random();
+    if (r<0.30) return qMathPerson();
+    if (r<0.55) return qMathTerm();
+    if (r<0.75) return qMathFact();
+    return qMathTrivia();
+}
+
+// --- MIX ---
+function genQuestion() {
+    if (mode==='music') return qMusic();
+    if (mode==='art') return qArt();
+    if (mode==='math') return qMath();
+    return pickR([qMusic,qArt,qMath])();
+}
+
+// ================================================================
+// UI
+// ================================================================
+
+function setMode(m) {
+    mode = m;
+    document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+    event.target.closest('.mode-btn').classList.add('active');
+    startRound();
+}
+
+function startRound() {
+    score=0; total=0; streak=0; bestStreak=0;
+    document.getElementById('score').textContent=0;
+    document.getElementById('streak').textContent=0;
+    document.getElementById('qnum').textContent=1;
+    nextQuestion();
+}
+
+function nextQuestion() {
+    if (total >= ROUND_LENGTH) { showEnd(); return; }
+    answered = false;
+    currentQ = genQuestion();
+
+    const card = document.getElementById('card');
+    card.innerHTML = `
+        <div class="q-label" id="q-label"></div>
+        <div class="q-text" id="q-text"></div>
+        <div class="answer-area" id="answer-area"></div>
+        <div class="feedback" id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Next Question</button>
+    `;
+
+    document.getElementById('q-label').textContent = currentQ.label;
+    document.getElementById('q-text').innerHTML = currentQ.text;
+    document.getElementById('qnum').textContent = total + 1;
+    document.getElementById('streak-msg').textContent = '';
+
+    const area = document.getElementById('answer-area');
+    area.innerHTML = `
+        <input class="answer-input" id="answer-input" type="text"
+            placeholder="Type your answer..." autocomplete="off" spellcheck="false">
+        <div class="answer-btns">
+            <button class="submit-btn" id="submit-btn" onclick="submitAnswer()">Submit</button>
+            <button class="give-up-btn" onclick="giveUp()">Show Answer</button>
+        </div>
+    `;
+
+    const input = document.getElementById('answer-input');
+    input.addEventListener('keydown', e => { if (e.key === 'Enter' && !answered) submitAnswer(); });
+    input.focus();
+}
+
+function submitAnswer() {
+    if (answered) return;
+    const input = document.getElementById('answer-input');
+    const val = input.value.trim();
+    if (!val) { input.focus(); return; }
+
+    answered = true;
+    total++;
+
+    const correct = fuzzyMatch(val, currentQ.answer, currentQ.alts);
+    const fb = document.getElementById('feedback');
+    input.disabled = true;
+    document.getElementById('submit-btn').disabled = true;
+
+    if (correct) {
+        score++; streak++;
+        if (streak > bestStreak) bestStreak = streak;
+        input.classList.add('correct');
+        fb.className = 'feedback correct';
+        fb.innerHTML = pickR(goodMsgs) + `<div class="fact">${currentQ.fact}</div>`;
+    } else {
+        streak = 0;
+        input.classList.add('wrong');
+        fb.className = 'feedback wrong';
+        fb.innerHTML = `${pickR(badMsgs)} The answer was <strong>${stripHtml(currentQ.answer)}</strong>.<div class="fact">${currentQ.fact}</div>`;
+    }
+
+    document.getElementById('score').textContent = score;
+    document.getElementById('streak').textContent = streak;
+    const nb = document.getElementById('next-btn');
+    nb.style.display = 'block';
+    nb.textContent = total >= ROUND_LENGTH ? 'See Results' : 'Next Question';
+
+    if (streak>=5) document.getElementById('streak-msg').textContent = '\uD83D\uDD25 ' + streak + ' in a row!';
+    else if (streak>=3) document.getElementById('streak-msg').textContent = '\u2728 ' + streak + ' in a row!';
+}
+
+function giveUp() {
+    if (answered) return;
+    answered = true;
+    total++;
+    streak = 0;
+
+    const input = document.getElementById('answer-input');
+    input.disabled = true;
+    input.classList.add('wrong');
+    document.getElementById('submit-btn').disabled = true;
+
+    const fb = document.getElementById('feedback');
+    fb.className = 'feedback wrong';
+    fb.innerHTML = `The answer was <strong>${stripHtml(currentQ.answer)}</strong>.<div class="fact">${currentQ.fact}</div>`;
+
+    document.getElementById('score').textContent = score;
+    document.getElementById('streak').textContent = streak;
+    const nb = document.getElementById('next-btn');
+    nb.style.display = 'block';
+    nb.textContent = total >= ROUND_LENGTH ? 'See Results' : 'Next Question';
+}
+
+function showEnd() {
+    const pct = Math.round((score/ROUND_LENGTH)*100);
+    let msg;
+    if (pct===100) msg="Perfect! You're ready for Rundle A.";
+    else if (pct>=80) msg="Excellent. Your weak categories are getting stronger.";
+    else if (pct>=60) msg="Solid work. Keep drilling the gaps.";
+    else if (pct>=40) msg="Getting there. Focus on the ones you missed.";
+    else msg="Lots of room to grow. That's the point of practice.";
+
+    document.getElementById('card').innerHTML = `
+        <div class="round-end">
+            <h2>📚 Round Complete!</h2>
+            <div class="final-score">${score}/${ROUND_LENGTH}</div>
+            <div class="final-msg">${msg}</div>
+            <div style="font-size:0.85rem;color:#6b8a80;margin-bottom:1rem;">Best streak: ${bestStreak}</div>
+            <button class="play-btn" onclick="startRound()">Play Again</button>
+        </div>
+    `;
+    document.getElementById('streak-msg').textContent = '';
+}
+
+startRound();
+</script>
+</body>
+</html>
